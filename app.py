@@ -4,24 +4,21 @@ import boto3
 import json
 import os
 import io
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # =========================
 # CONFIG & SETUP
 # =========================
-load_dotenv()
-
-# Configure AWS Bedrock
 try:
-    region = os.getenv("AWS_DEFAULT_REGION", "us-east-1")
+    region = st.secrets.get("AWS", {}).get("DEFAULT_REGION", "us-east-1")
     model_id = "anthropic.claude-3-5-sonnet-20240620-v1:0"
     
-    # Initialize Bedrock client
+    # Initialize Bedrock client using Streamlit secrets
     client = boto3.client(
         "bedrock-runtime",
         region_name=region,
-        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+        aws_access_key_id=st.secrets["AWS"]["ACCESS_KEY_ID"],
+        aws_secret_access_key=st.secrets["AWS"]["SECRET_ACCESS_KEY"]
     )
 except Exception as e:
     st.error(f"AWS Bedrock configuration error: {e}")
